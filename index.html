@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Procesos & Presentaciones · Fintech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#060d1f;--navy-2:#0c1a35;--navy-3:#112247;
+  --blue:#1a6cf6;--blue-light:#3d8bff;
+  --cyan:#00d4ff;--cyan-dim:#00b4d822;--teal:#0af5c8;
+  --white:#f0f6ff;--white-dim:#c8d8f0;--muted:#6a87b8;
+  --border:#1e3560;--card:#0d1e3c;--card-2:#0f2347;
+  --warning:#ffb347;--danger:#ff4f6e;--gold:#ffd166;
+  --collab-l:#a78bfa;--sf:#00A1E0;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);min-height:100vh;}
+
+/* ── BG ─────────────────────────── */
+.bg-fx{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 20%, rgba(26,108,246,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 85% 70%, rgba(0,212,255,.07) 0%, transparent 60%);
+}
+.bg-grid{position:fixed;inset:0;pointer-events:none;z-index:0;
+  background-image:
+    linear-gradient(rgba(30,53,96,.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30,53,96,.25) 1px, transparent 1px);
+  background-size:48px 48px;
+}
+
+/* ── LAYOUT ─────────────────────── */
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 28px;}
+
+/* ── HEADER ─────────────────────── */
+header{padding:48px 0 0;}
+.header-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;flex-wrap:wrap;}
+.header-left{}
+.kicker{display:inline-flex;align-items:center;gap:7px;
+  background:var(--cyan-dim);border:1px solid rgba(0,212,255,.3);
+  border-radius:99px;padding:5px 14px;
+  font-size:10.5px;font-weight:700;color:var(--cyan);
+  letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;}
+h1{font-size:40px;font-weight:700;line-height:1.1;letter-spacing:-.025em;margin-bottom:10px;}
+h1 span{background:linear-gradient(90deg,var(--cyan),var(--blue-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.header-desc{font-size:14.5px;color:var(--muted);max-width:520px;line-height:1.7;}
+.header-meta{display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap;}
+.meta-chip{font-size:11px;padding:4px 11px;border-radius:99px;
+  background:var(--card);border:1px solid var(--border);color:var(--white-dim);}
+
+/* ── DIVIDER ─────────────────────── */
+.divider{height:1px;background:var(--border);margin:36px 0;}
+
+/* ── FILTERS ─────────────────────── */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.filter-btn{font-size:11.5px;font-weight:600;padding:6px 14px;border-radius:99px;
+  border:1px solid var(--border);background:transparent;color:var(--muted);
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filter-btn:hover{color:var(--white);border-color:var(--blue-light);}
+.filter-btn.active{background:var(--blue);border-color:var(--blue);color:white;
+  box-shadow:0 4px 16px rgba(26,108,246,.3);}
+
+/* ── SECTION HEADING ─────────────── */
+.section-label{font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:16px;font-family:'DM Mono',monospace;
+  display:flex;align-items:center;gap:8px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── CARDS GRID ──────────────────── */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;margin-bottom:48px;}
+
+.pres-card{
+  background:var(--card);border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;transition:all .25s;text-decoration:none;color:inherit;
+  display:flex;flex-direction:column;
+}
+.pres-card:hover{border-color:var(--blue);box-shadow:0 8px 32px rgba(0,0,0,.4),0 0 0 1px rgba(26,108,246,.2);transform:translateY(-3px);}
+
+.card-top{height:6px;width:100%;}
+
+.card-body{padding:20px;flex:1;display:flex;flex-direction:column;}
+
+.card-badges{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.cbadge{font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:4px;text-transform:uppercase;letter-spacing:.06em;}
+.cb-ops{background:rgba(26,108,246,.15);color:var(--blue-light);}
+.cb-ci{background:rgba(255,179,71,.12);color:var(--warning);}
+.cb-dir{background:rgba(10,245,200,.1);color:var(--teal);}
+.cb-cs{background:rgba(0,212,255,.1);color:var(--cyan);}
+.cb-tech{background:rgba(167,139,250,.12);color:var(--collab-l);}
+.cb-new{background:rgba(255,79,110,.12);color:var(--danger);}
+.cb-wip{background:rgba(255,179,71,.1);color:var(--warning);}
+.cb-done{background:rgba(10,245,200,.1);color:var(--teal);}
+
+.card-title{font-size:16px;font-weight:700;color:var(--white);margin-bottom:6px;line-height:1.3;}
+.card-desc{font-size:12.5px;color:var(--muted);line-height:1.6;flex:1;}
+
+.card-footer{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;border-top:1px solid var(--border);background:var(--navy-3);}
+.card-date{font-size:10.5px;color:var(--muted);font-family:'DM Mono',monospace;}
+.card-link{font-size:11.5px;font-weight:700;color:var(--cyan);
+  display:flex;align-items:center;gap:5px;transition:gap .2s;}
+.pres-card:hover .card-link{gap:8px;}
+
+/* ── COMING SOON CARD ────────────── */
+.pres-card.soon{opacity:.55;pointer-events:none;}
+.pres-card.soon:hover{transform:none;box-shadow:none;}
+
+/* ── STATS BAR ───────────────────── */
+.stats-bar{display:flex;gap:0;border:1px solid var(--border);border-radius:12px;
+  overflow:hidden;margin-bottom:40px;}
+.stat{flex:1;padding:16px 20px;text-align:center;border-right:1px solid var(--border);}
+.stat:last-child{border-right:none;}
+.stat-num{font-size:26px;font-weight:700;font-family:'DM Mono',monospace;
+  background:linear-gradient(90deg,var(--cyan),var(--blue-light));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-label{font-size:11px;color:var(--muted);margin-top:2px;}
+
+/* ── FOOTER ──────────────────────── */
+footer{padding:32px 0;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;}
+.footer-left{font-size:12px;color:var(--muted);}
+.footer-left strong{color:var(--white-dim);}
+.footer-right{display:flex;gap:8px;}
+.foot-chip{font-size:10.5px;padding:3px 10px;border-radius:99px;
+  background:var(--card);border:1px solid var(--border);color:var(--muted);}
+
+/* ── EMPTY STATE ─────────────────── */
+.empty{text-align:center;padding:60px 20px;color:var(--muted);}
+.empty-icon{font-size:40px;margin-bottom:12px;}
+.empty-text{font-size:14px;}
+
+@media(max-width:640px){
+  h1{font-size:28px;}
+  .stats-bar{flex-direction:column;}
+  .stat{border-right:none;border-bottom:1px solid var(--border);}
+  .stat:last-child{border-bottom:none;}
+  .cards{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="bg-fx"></div>
+<div class="bg-grid"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="kicker">⚡ Repositorio de Procesos</div>
+        <h1>Procesos &<br><span>Presentaciones</span></h1>
+        <p class="header-desc">Repositorio central de presentaciones ejecutivas, procesos operativos y documentación para equipos de Operaciones, Tecnología, Control Interno y Dirección.</p>
+        <div class="header-meta">
+          <span class="meta-chip">🏛️ Dirección</span>
+          <span class="meta-chip">🔍 Control Interno</span>
+          <span class="meta-chip">⚙️ Operaciones</span>
+          <span class="meta-chip">💻 Tecnología</span>
+          <span class="meta-chip">💬 Customer Success</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="divider"></div>
+
+  <!-- STATS -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num" id="countTotal">1</div>
+      <div class="stat-label">Presentaciones</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="countDone">1</div>
+      <div class="stat-label">Publicadas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="countWip">0</div>
+      <div class="stat-label">En desarrollo</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">5</div>
+      <div class="stat-label">Áreas cubiertas</div>
+    </div>
+  </div>
+
+  <!-- FILTERS -->
+  <div class="filters" id="filters">
+    <button class="filter-btn active" data-filter="all">Todas</button>
+    <button class="filter-btn" data-filter="ops">Operaciones</button>
+    <button class="filter-btn" data-filter="ci">Control Interno</button>
+    <button class="filter-btn" data-filter="dir">Dirección</button>
+    <button class="filter-btn" data-filter="tech">Tecnología</button>
+    <button class="filter-btn" data-filter="cs">Customer Success</button>
+  </div>
+
+  <!-- CARDS -->
+  <div class="section-label">● Presentaciones disponibles</div>
+  <div class="cards" id="cardsGrid"></div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-left">Repositorio interno · <strong>Fintech — Procesos Operativos</strong></div>
+    <div class="footer-right">
+      <span class="foot-chip">HTML · GitHub Pages</span>
+      <span class="foot-chip" id="lastUpdated"></span>
+    </div>
+  </footer>
+
+</div><!-- /wrap -->
+
+<script>
+// ── DATOS DE PRESENTACIONES ─────────────────────────────────────────
+// Para agregar una nueva presentación, copia un objeto de este array
+// y rellena los campos. El archivo HTML debe estar en la misma carpeta.
+const presentations = [
+  {
+    id: 'intermitencias',
+    title: 'Comunicación de Intermitencias',
+    desc: 'Proceso estructurado para gestionar, comunicar y documentar interrupciones operativas. Dos vías: Temporal (Salesforce) y Definitiva (Collab CRM). Incluye diagramas BPMN por vía.',
+    file: 'curso_intermitencias_lms.html',
+    date: '2025-03',
+    areas: ['ops','ci','dir','cs','tech'],
+    status: 'done',   // done | wip | soon
+    color: '#1a6cf6', // color de la franja superior
+    modules: 11,
+    icon: '📡',
+  },
+
+  // ── PLANTILLA PARA NUEVA PRESENTACIÓN ──────────────────────────────
+  // Descomenta y edita para agregar una nueva:
+  //
+  // {
+  //   id: 'id-unico',
+  //   title: 'Título de la presentación',
+  //   desc: 'Descripción breve del contenido y objetivo.',
+  //   file: 'nombre-del-archivo.html',
+  //   date: '2025-04',
+  //   areas: ['ops','ci'],          // ops | ci | dir | cs | tech
+  //   status: 'wip',               // done | wip | soon
+  //   color: '#0af5c8',
+  //   modules: 8,
+  //   icon: '⚙️',
+  // },
+];
+
+// ── ÁREA LABELS ────────────────────────────────────────────────────
+const areaLabels = {
+  ops:  { label:'Operaciones',     cls:'cb-ops'  },
+  ci:   { label:'Control Interno', cls:'cb-ci'   },
+  dir:  { label:'Dirección',       cls:'cb-dir'  },
+  cs:   { label:'Customer Success',cls:'cb-cs'   },
+  tech: { label:'Tecnología',      cls:'cb-tech' },
+};
+
+const statusLabels = {
+  done: { label:'Publicado', cls:'cb-done' },
+  wip:  { label:'En desarrollo', cls:'cb-wip' },
+  soon: { label:'Próximamente', cls:'cb-ci' },
+};
+
+// ── RENDER ─────────────────────────────────────────────────────────
+function renderCards(filter='all') {
+  const grid = document.getElementById('cardsGrid');
+  const filtered = filter === 'all'
+    ? presentations
+    : presentations.filter(p => p.areas.includes(filter));
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `
+      <div class="empty" style="grid-column:1/-1">
+        <div class="empty-icon">📭</div>
+        <div class="empty-text">No hay presentaciones para esta área todavía.</div>
+      </div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(p => {
+    const areaBadges = p.areas.map(a =>
+      `<span class="cbadge ${areaLabels[a].cls}">${areaLabels[a].label}</span>`
+    ).join('');
+
+    const st = statusLabels[p.status];
+    const isSoon = p.status === 'soon';
+
+    return `
+    <a href="${isSoon ? '#' : p.file}" class="pres-card${isSoon?' soon':''}" ${isSoon?'':'target="_blank"'}>
+      <div class="card-top" style="background:${p.color}"></div>
+      <div class="card-body">
+        <div class="card-badges">
+          ${areaBadges}
+          <span class="cbadge ${st.cls}">${st.label}</span>
+        </div>
+        <div class="card-title">${p.icon} ${p.title}</div>
+        <div class="card-desc">${p.desc}</div>
+      </div>
+      <div class="card-footer">
+        <div class="card-date">${p.date} · ${p.modules} módulos</div>
+        <div class="card-link">${isSoon ? 'Próximamente' : 'Ver presentación'} →</div>
+      </div>
+    </a>`;
+  }).join('');
+}
+
+// ── STATS ──────────────────────────────────────────────────────────
+function updateStats() {
+  document.getElementById('countTotal').textContent = presentations.length;
+  document.getElementById('countDone').textContent  = presentations.filter(p=>p.status==='done').length;
+  document.getElementById('countWip').textContent   = presentations.filter(p=>p.status==='wip').length;
+  document.getElementById('lastUpdated').textContent =
+    new Date().toLocaleDateString('es-MX',{month:'short',year:'numeric'});
+}
+
+// ── FILTERS ────────────────────────────────────────────────────────
+document.getElementById('filters').addEventListener('click', e => {
+  const btn = e.target.closest('.filter-btn');
+  if (!btn) return;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCards(btn.dataset.filter);
+});
+
+// ── INIT ───────────────────────────────────────────────────────────
+renderCards();
+updateStats();
+</script>
+</body>
+</html>

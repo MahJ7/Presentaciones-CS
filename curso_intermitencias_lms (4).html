@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proceso: Comunicación de Intermitencias · Presentación Ejecutiva</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#060d1f;--navy-2:#0c1a35;--navy-3:#112247;
+  --blue:#1a6cf6;--blue-light:#3d8bff;
+  --cyan:#00d4ff;--cyan-dim:#00b4d833;--teal:#0af5c8;
+  --white:#f0f6ff;--white-dim:#c8d8f0;--muted:#6a87b8;
+  --border:#1e3560;--card:#0d1e3c;--card-2:#0f2347;
+  --success:#0af5c8;--warning:#ffb347;--danger:#ff4f6e;--gold:#ffd166;
+  --sf:#00A1E0;--collab:#7c3aed;--collab-l:#a78bfa;
+  --radius:14px;--radius-sm:8px;--glow:0 0 30px rgba(0,212,255,.15);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden;}
+.app{display:flex;height:100vh;overflow:hidden;}
+
+/* SIDEBAR */
+.sidebar{width:252px;min-width:252px;background:var(--navy-2);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto;}
+.sb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--border);}
+.sb-badge{display:inline-flex;align-items:center;gap:5px;background:var(--cyan-dim);border:1px solid var(--cyan);border-radius:5px;padding:3px 9px;font-size:9.5px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:7px;}
+.sb-title{font-size:12px;font-weight:700;color:var(--white-dim);line-height:1.4;}
+.sb-sub{font-size:10.5px;color:var(--muted);margin-top:2px;}
+.prog-wrap{padding:10px 16px;border-bottom:1px solid var(--border);}
+.prog-label{font-size:10px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;}
+.prog-bar{height:3px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));transition:width .5s;}
+.nav-list{padding:8px 0;flex:1;}
+.nav-item{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;border-left:3px solid transparent;transition:all .2s;font-size:11.5px;color:var(--muted);font-weight:500;}
+.nav-item:hover{color:var(--white);background:rgba(255,255,255,.03);}
+.nav-item.active{border-left-color:var(--cyan);color:var(--white);background:rgba(0,212,255,.05);}
+.nav-item.active .nn,.nav-item.completed .nn{background:var(--cyan);color:var(--navy);}
+.nn{width:19px;height:19px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace;}
+
+/* MAIN */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
+.topbar{height:50px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;flex-shrink:0;background:var(--navy-2);}
+.tb-crumb{font-size:11.5px;color:var(--muted);}
+.tb-crumb span{color:var(--cyan);}
+.tb-actions{display:flex;gap:7px;}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 15px;border-radius:var(--radius-sm);font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;}
+.btn-p{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:white;box-shadow:0 4px 16px rgba(26,108,246,.3);}
+.btn-p:hover{transform:translateY(-1px);}
+.btn-g{background:transparent;color:var(--muted);border:1px solid var(--border);}
+.btn-g:hover{color:var(--white);border-color:var(--blue-light);}
+
+/* SLIDES */
+.slides-wrap{flex:1;overflow:hidden;position:relative;}
+.slide{position:absolute;inset:0;overflow-y:auto;padding:30px 44px;opacity:0;transform:translateX(36px);transition:all .4s cubic-bezier(.4,0,.2,1);pointer-events:none;}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.exit{opacity:0;transform:translateX(-36px);}
+
+/* TYPE */
+.mod-label{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;font-family:'DM Mono',monospace;}
+.slide-title{font-size:30px;font-weight:700;line-height:1.15;color:var(--white);margin-bottom:7px;letter-spacing:-.02em;}
+.slide-sub{font-size:14px;color:var(--muted);max-width:720px;line-height:1.6;margin-bottom:24px;}
+.sec-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:4px;}
+h4{font-size:13px;font-weight:700;color:var(--white);margin-bottom:5px;}
+p{font-size:13px;color:var(--white-dim);line-height:1.7;}
+
+/* GRID */
+.g{display:grid;gap:12px;}
+.g2{grid-template-columns:repeat(2,1fr);}
+.g3{grid-template-columns:repeat(3,1fr);}
+
+/* CARDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;transition:all .25s;}
+.card:hover{border-color:var(--blue);box-shadow:var(--glow);transform:translateY(-2px);}
+.card-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:10px;background:var(--cyan-dim);}
+.card-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px;}
+
+/* RISK */
+.rc{border-left:3px solid var(--danger);padding:11px 14px;background:rgba(255,79,110,.06);border-radius:0 6px 6px 0;margin-bottom:7px;}
+.rc.w{border-left-color:var(--warning);background:rgba(255,179,71,.06);}
+.rc.ok{border-left-color:var(--success);background:rgba(10,245,200,.06);}
+.rt{font-size:9.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--danger);margin-bottom:3px;display:block;}
+.rt.w{color:var(--warning);}
+.rt.ok{color:var(--success);}
+
+/* SCOPE */
+.scope{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;}
+.scope-h{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--border);}
+.scope-in .scope-h{color:var(--teal);}
+.scope-out .scope-h{color:var(--danger);}
+.si{display:flex;align-items:flex-start;gap:7px;padding:5px 0;font-size:12px;color:var(--white-dim);border-bottom:1px solid rgba(255,255,255,.04);line-height:1.4;}
+.si:last-child{border-bottom:none;}
+
+/* ROLE CARDS */
+.rc2{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:all .25s;}
+.rc2:hover{border-color:var(--blue);box-shadow:var(--glow);}
+.rh{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.rav{width:38px;height:38px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0;}
+.rn{font-size:13px;font-weight:700;color:var(--white);}
+.rd{font-size:10px;color:var(--muted);}
+.rl{list-style:none;}
+.rl li{font-size:11.5px;color:var(--white-dim);padding:4px 0;display:flex;align-items:flex-start;gap:6px;line-height:1.35;border-bottom:1px solid var(--border);}
+.rl li:last-child{border-bottom:none;}
+.dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:5px;}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:separate;border-spacing:0;}
+.tbl th{padding:8px 13px;font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--navy-3);border-bottom:1px solid var(--border);text-align:left;}
+.tbl td{padding:10px 13px;font-size:12px;color:var(--white-dim);border-bottom:1px solid var(--border);vertical-align:middle;}
+.tbl tr:last-child td{border-bottom:none;}
+.tbl tr:hover td{background:rgba(255,255,255,.02);}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;}
+.by{background:rgba(10,245,200,.12);color:var(--teal);}
+.bn{background:rgba(255,79,110,.12);color:var(--danger);}
+.bw{background:rgba(255,179,71,.12);color:var(--warning);}
+
+/* PLATFORM BADGES */
+.pb{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;}
+.pb-sf{background:rgba(0,161,224,.12);color:var(--sf);border:1px solid rgba(0,161,224,.3);}
+.pb-cl{background:rgba(167,139,250,.12);color:var(--collab-l);border:1px solid rgba(167,139,250,.3);}
+.pb-sms{background:rgba(0,212,255,.1);color:var(--cyan);border:1px solid rgba(0,212,255,.3);}
+
+/* CALLOUT */
+.cl2{display:flex;gap:11px;padding:12px 15px;background:rgba(0,212,255,.06);border:1px solid rgba(0,212,255,.25);border-radius:6px;margin-top:12px;}
+.cl2-icon{font-size:17px;flex-shrink:0;}
+.cl2-text{font-size:12.5px;color:var(--white-dim);line-height:1.6;}
+.cl2.w{background:rgba(255,179,71,.06);border-color:rgba(255,179,71,.25);}
+.cl2.d{background:rgba(255,79,110,.06);border-color:rgba(255,79,110,.25);}
+.cl2.purple{background:rgba(167,139,250,.06);border-color:rgba(167,139,250,.3);}
+
+/* EVIDENCE */
+.ev-row{display:flex;gap:9px;margin-bottom:7px;}
+.ev-n{width:24px;height:24px;border-radius:50%;background:var(--blue);color:white;font-size:9.5px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;font-family:'DM Mono',monospace;}
+.ev-b{flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:8px 12px;}
+.ev-name{font-size:12px;font-weight:600;color:var(--white);margin-bottom:2px;}
+.ev-desc{font-size:11px;color:var(--muted);line-height:1.5;}
+
+/* TERMINAL */
+.term{background:#040b18;border:1px solid var(--border);border-radius:6px;padding:12px;font-family:'DM Mono',monospace;font-size:11px;color:var(--teal);line-height:1.8;margin-top:9px;overflow-x:auto;}
+.tm{color:var(--muted);}
+.tw{color:var(--white);}
+.tg{color:var(--gold);}
+.tsf{color:var(--sf);}
+.tcl{color:var(--collab-l);}
+
+/* HERO */
+.hero{min-height:100%;display:flex;flex-direction:column;justify-content:center;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 60% 40%,rgba(26,108,246,.12) 0%,transparent 70%),radial-gradient(ellipse 40% 40% at 80% 80%,rgba(0,212,255,.08) 0%,transparent 60%);pointer-events:none;}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(30,53,96,.3) 1px,transparent 1px),linear-gradient(90deg,rgba(30,53,96,.3) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;}
+.hero-c{position:relative;z-index:2;max-width:680px;}
+.hero-kick{display:inline-flex;align-items:center;gap:6px;background:rgba(0,212,255,.08);border:1px solid rgba(0,212,255,.3);border-radius:99px;padding:5px 13px;font-size:10px;font-weight:700;color:var(--cyan);letter-spacing:.1em;text-transform:uppercase;margin-bottom:18px;}
+.hero-title{font-size:46px;font-weight:700;line-height:1.08;letter-spacing:-.03em;color:var(--white);margin-bottom:14px;}
+.hero-title span{background:linear-gradient(90deg,var(--cyan),var(--blue-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-desc{font-size:15px;color:var(--muted);line-height:1.7;max-width:540px;margin-bottom:26px;}
+.hero-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:28px;}
+.hero-tag{font-size:11px;padding:4px 10px;border-radius:99px;background:var(--card);border:1px solid var(--border);color:var(--white-dim);}
+.hero-stats{display:flex;gap:26px;}
+.hs-num{font-size:24px;font-weight:700;color:var(--white);font-family:'DM Mono',monospace;line-height:1;}
+.hs-lbl{font-size:10.5px;color:var(--muted);margin-top:2px;}
+
+/* CRIT BOX */
+.crit{background:linear-gradient(135deg,rgba(255,79,110,.08),rgba(255,179,71,.05));border:1px solid rgba(255,79,110,.25);border-radius:var(--radius);padding:18px;text-align:center;margin-bottom:12px;}
+.crit-icon{font-size:32px;margin-bottom:9px;}
+.crit-title{font-size:15px;font-weight:700;color:var(--white);margin-bottom:5px;}
+.crit-desc{font-size:12.5px;color:var(--muted);line-height:1.6;}
+
+/* BENEFIT */
+.ben{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px;display:flex;gap:12px;align-items:flex-start;transition:all .25s;}
+.ben:hover{border-color:var(--cyan);box-shadow:var(--glow);}
+.ben-n{font-family:'DM Mono',monospace;font-size:22px;font-weight:700;color:var(--cyan);line-height:1;flex-shrink:0;opacity:.4;}
+.ben-title{font-size:13.5px;font-weight:700;color:var(--white);margin-bottom:4px;}
+.ben-desc{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* PATH HEADERS */
+.path-t .path-h{background:rgba(0,161,224,.08);border:1px solid rgba(0,161,224,.3);border-bottom:none;color:var(--sf);}
+.path-d .path-h{background:rgba(124,58,237,.08);border:1px solid rgba(167,139,250,.3);border-bottom:none;color:var(--collab-l);}
+.path-h{display:flex;align-items:center;gap:9px;padding:11px 15px;border-radius:7px 7px 0 0;font-size:13px;font-weight:700;}
+.path-b{border-radius:0 0 7px 7px;padding:14px 16px;}
+.path-t .path-b{background:rgba(0,161,224,.03);border:1px solid rgba(0,161,224,.2);}
+.path-d .path-b{background:rgba(124,58,237,.04);border:1px solid rgba(167,139,250,.2);}
+
+/* BPMN */
+.bpmn-outer{overflow-x:auto;padding:0 0 10px;}
+.bpmn{display:flex;flex-direction:column;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;min-width:820px;}
+.lane{display:flex;min-height:64px;}
+.lane-lbl{width:112px;min-width:112px;background:var(--navy-3);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:center;padding:9px 12px;border-bottom:1px solid var(--border);}
+.lane:last-child .lane-lbl{border-bottom:none;}
+.lane-name{font-size:10.5px;font-weight:700;color:var(--white-dim);}
+.lane-sub{font-size:8.5px;color:var(--muted);margin-top:2px;}
+.lane-body{flex:1;display:flex;align-items:center;padding:9px 13px;gap:5px;border-bottom:1px solid var(--border);flex-wrap:wrap;row-gap:6px;}
+.lane:last-child .lane-body{border-bottom:none;}
+
+/* BPMN nodes */
+.be{width:30px;height:30px;border-radius:50%;border:2px solid var(--border);background:var(--card);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;}
+.be.start{border-color:var(--teal);background:rgba(10,245,200,.08);}
+.be.end-ok{border-color:var(--teal);border-width:3px;background:rgba(10,245,200,.1);}
+.bt{min-width:84px;height:42px;background:var(--card-2);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;padding:0 8px;font-size:10px;font-weight:600;color:var(--white-dim);text-align:center;line-height:1.3;flex-shrink:0;transition:all .2s;position:relative;}
+.bt:hover{border-color:var(--cyan);color:var(--cyan);background:var(--cyan-dim);}
+.bt.ops{border-color:rgba(26,108,246,.4);color:var(--blue-light);background:rgba(26,108,246,.08);}
+.bt.sf2{border-color:rgba(0,161,224,.45);color:var(--sf);background:rgba(0,161,224,.08);}
+.bt.cl2{border-color:rgba(167,139,250,.45);color:var(--collab-l);background:rgba(124,58,237,.09);}
+.bt.ci2{border-color:rgba(255,179,71,.35);color:var(--warning);background:rgba(255,179,71,.07);}
+.bt.dir{border-color:rgba(10,245,200,.35);color:var(--teal);background:rgba(10,245,200,.06);}
+.bt.hl{animation:ptask 2.2s ease-in-out infinite;}
+@keyframes ptask{0%,100%{box-shadow:none;}50%{box-shadow:0 0 12px rgba(0,212,255,.3);}}
+.bt.hl-sf{animation:ptask-sf 2.2s ease-in-out infinite;}
+@keyframes ptask-sf{0%,100%{box-shadow:none;}50%{box-shadow:0 0 10px rgba(0,161,224,.35);}}
+.bt.hl-cl{animation:ptask-cl 2.2s ease-in-out infinite;}
+@keyframes ptask-cl{0%,100%{box-shadow:none;}50%{box-shadow:0 0 10px rgba(167,139,250,.35);}}
+.bdb{width:78px;height:40px;background:var(--card-2);border:1px solid var(--border);border-radius:4px 4px 8px 8px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:600;color:var(--muted);text-align:center;position:relative;padding:0 5px;flex-shrink:0;}
+.bdb::before{content:'';position:absolute;top:-5px;left:0;right:0;height:10px;background:var(--card-2);border:1px solid var(--border);border-radius:4px;}
+.bdb.ops-db{border-color:rgba(26,108,246,.4);color:var(--blue-light);}
+.bdb.ops-db::before{border-color:rgba(26,108,246,.4);}
+.ba{display:flex;align-items:center;color:var(--muted);font-size:15px;flex-shrink:0;}
+.bgw{width:32px;height:32px;background:var(--card-2);border:1px solid var(--warning);transform:rotate(45deg);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.bgw span{transform:rotate(-45deg);font-size:12px;}
+.cb{position:absolute;top:-6px;right:-4px;font-size:7.5px;font-weight:700;padding:1px 3px;border-radius:3px;line-height:1.4;}
+.cb-sf{background:rgba(0,161,224,.95);color:white;}
+.cb-cl{background:rgba(124,58,237,.95);color:white;}
+
+/* OPTIONAL NODE (dashed) */
+.bt.optional{border-style:dashed;opacity:.7;}
+.bt.optional::after{content:'opcional';position:absolute;bottom:-14px;left:50%;transform:translateX(-50%);font-size:8px;color:var(--muted);white-space:nowrap;font-style:italic;}
+
+/* STEP FLOW */
+.sf-wrap{display:flex;flex-direction:column;gap:4px;}
+.si2{display:flex;gap:13px;align-items:stretch;cursor:pointer;}
+.sl{display:flex;flex-direction:column;align-items:center;width:34px;flex-shrink:0;}
+.sc{width:32px;height:32px;border-radius:50%;background:var(--card);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:11px;font-weight:600;color:var(--muted);transition:all .3s;flex-shrink:0;}
+.sln{width:2px;flex:1;background:var(--border);min-height:16px;transition:background .3s;}
+.sb2{flex:1;background:var(--card);border:1px solid var(--border);border-radius:6px;padding:11px 13px;margin-bottom:4px;transition:all .3s;}
+.si2:hover .sc,.si2.open .sc{background:var(--cyan);border-color:var(--cyan);color:var(--navy);}
+.si2:hover .sb2,.si2.open .sb2{border-color:var(--cyan);background:var(--card-2);}
+.si2:hover .sln,.si2.open .sln{background:var(--cyan);}
+.s-name{font-size:12.5px;font-weight:600;color:var(--white);display:flex;align-items:center;justify-content:space-between;}
+.s-arr{font-size:10px;color:var(--muted);transition:transform .3s;}
+.si2.open .s-arr{transform:rotate(180deg);}
+.s-det{max-height:0;overflow:hidden;transition:max-height .35s ease;}
+.si2.open .s-det{max-height:260px;}
+.s-det p{font-size:12px;color:var(--muted);padding-top:6px;line-height:1.6;}
+.s-who{display:inline-flex;align-items:center;gap:4px;font-size:10px;color:var(--cyan);font-weight:600;margin-top:5px;}
+.s-io{display:flex;gap:7px;margin-top:5px;flex-wrap:wrap;}
+.ip,.op{font-size:9.5px;font-weight:600;padding:2px 6px;border-radius:3px;font-family:'DM Mono',monospace;}
+.ip{background:rgba(10,245,200,.12);color:var(--teal);}
+.op{background:rgba(0,212,255,.12);color:var(--cyan);}
+
+/* BOTTOM NAV */
+.bottom-nav{border-top:1px solid var(--border);padding:11px 44px;display:flex;align-items:center;justify-content:space-between;background:var(--navy-2);flex-shrink:0;}
+.slide-c{font-family:'DM Mono',monospace;font-size:11px;color:var(--muted);}
+.slide-c span{color:var(--white);}
+
+/* CHANNEL VISUAL CARD */
+.ch-card{border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+.ch-header{padding:13px 16px;display:flex;align-items:center;gap:10px;}
+.ch-header.sf-h{background:rgba(0,161,224,.08);border-bottom:1px solid rgba(0,161,224,.2);}
+.ch-header.cl-h{background:rgba(124,58,237,.08);border-bottom:1px solid rgba(167,139,250,.2);}
+.ch-title{font-size:16px;font-weight:700;}
+.ch-title.sf-t{color:var(--sf);}
+.ch-title.cl-t{color:var(--collab-l);}
+.ch-body{background:var(--card);padding:14px 16px;}
+.ch-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;font-size:12px;color:var(--white-dim);border-bottom:1px solid var(--border);line-height:1.4;}
+.ch-row:last-child{border-bottom:none;}
+.ch-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+.ch-tag{font-size:9.5px;font-weight:700;padding:1px 6px;border-radius:3px;margin-left:auto;white-space:nowrap;flex-shrink:0;}
+.tag-sf{background:rgba(0,161,224,.15);color:var(--sf);}
+.tag-cl{background:rgba(167,139,250,.15);color:var(--collab-l);}
+.tag-opt{background:rgba(255,179,71,.12);color:var(--warning);}
+
+/* VIAS COMPARE BIG */
+.via-box{border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;}
+.via-top{padding:14px 18px;display:flex;align-items:center;gap:10px;}
+.via-top.temp{background:rgba(0,161,224,.07);border-bottom:1px solid rgba(0,161,224,.2);}
+.via-top.def{background:rgba(124,58,237,.07);border-bottom:1px solid rgba(167,139,250,.2);}
+.via-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:4px 10px;border-radius:5px;}
+.via-tag.temp{background:rgba(0,161,224,.15);color:var(--sf);}
+.via-tag.def{background:rgba(167,139,250,.15);color:var(--collab-l);}
+.via-name{font-size:18px;font-weight:700;}
+.via-name.temp{color:var(--sf);}
+.via-name.def{color:var(--collab-l);}
+.via-body{padding:14px 18px;background:var(--card);}
+
+::-webkit-scrollbar{width:4px;height:4px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;}
+::-webkit-scrollbar-thumb:hover{background:var(--blue);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+.slide.active .card,.slide.active .rc2,.slide.active .ben,.slide.active .ch-card,.slide.active .via-box{animation:fadeUp .38s ease both;}
+.slide.active .card:nth-child(1),.slide.active .rc2:nth-child(1),.slide.active .ben:nth-child(1),.slide.active .ch-card:nth-child(1),.slide.active .via-box:nth-child(1){animation-delay:.04s;}
+.slide.active .card:nth-child(2),.slide.active .rc2:nth-child(2),.slide.active .ben:nth-child(2),.slide.active .ch-card:nth-child(2),.slide.active .via-box:nth-child(2){animation-delay:.09s;}
+.slide.active .card:nth-child(3),.slide.active .rc2:nth-child(3),.slide.active .ben:nth-child(3){animation-delay:.14s;}
+.slide.active .card:nth-child(4),.slide.active .rc2:nth-child(4),.slide.active .ben:nth-child(4){animation-delay:.19s;}
+@media(max-width:768px){.sidebar{display:none;}.slide{padding:18px 14px;}.g2,.g3{grid-template-columns:1fr;}.hero-title{font-size:28px;}}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ SIDEBAR ══════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-badge">⚡ Proceso Ejecutivo</div>
+    <div class="sb-title">Comunicación de Intermitencias</div>
+    <div class="sb-sub">Presentación para Gerentes y Directores</div>
+  </div>
+  <div class="prog-wrap">
+    <div class="prog-label"><span>Avance</span><span id="progTxt">0 / 11</span></div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill"></div></div>
+  </div>
+  <nav class="nav-list" id="navList"></nav>
+</aside>
+
+<!-- ══ MAIN ══════════════════════════════════ -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-crumb" id="tbCrumb">Proceso · <span>Comunicación de Intermitencias</span></div>
+    <div class="tb-actions">
+      <button class="btn btn-g" onclick="prevSlide()">← Anterior</button>
+      <button class="btn btn-p" id="btnNext" onclick="nextSlide()">Siguiente →</button>
+    </div>
+  </div>
+
+  <div class="slides-wrap">
+
+    <!-- ════ SLIDE 0 · PORTADA ═════════════════ -->
+    <div class="slide active" data-title="Portada">
+      <div class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-grid"></div>
+        <div class="hero-c">
+          <div class="hero-kick">⚡ Proceso Operativo · Presentación Ejecutiva</div>
+          <h1 class="hero-title">Comunicación de<br><span>Intermitencias</span></h1>
+          <p class="hero-desc">
+            Proceso estructurado para gestionar, comunicar y documentar interrupciones operativas en dos vías:<br>
+            <strong style="color:var(--sf)">Temporal — Salesforce (email)</strong> &nbsp;|&nbsp;
+            <strong style="color:var(--collab-l)">Definitiva — Collab (SMS + email opcional)</strong>
+          </p>
+          <div class="hero-tags">
+            <span class="hero-tag">🏛️ Dirección General</span>
+            <span class="hero-tag">🔍 Control Interno</span>
+            <span class="hero-tag">⚙️ Operaciones</span>
+            <span class="hero-tag">💻 Tecnología</span>
+            <span class="hero-tag">💬 Customer Success</span>
+          </div>
+          <div class="hero-stats">
+            <div><div class="hs-num">11</div><div class="hs-lbl">Secciones</div></div>
+            <div><div class="hs-num">9</div><div class="hs-lbl">Pasos del proceso</div></div>
+            <div><div class="hs-num">2</div><div class="hs-lbl">Vías operativas</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 1 · CONTEXTO ════════════════ -->
+    <div class="slide" data-title="M1 · Contexto y Problema">
+      <div class="mod-label">● Módulo 1 · Contexto</div>
+      <h2 class="slide-title">¿Qué problema resuelve este proceso?</h2>
+      <p class="slide-sub">Las intermitencias sin gestión estructurada generan riesgo operativo, reputacional y de auditoría. El proceso define quién comunica, qué y cuándo, en cada vía disponible.</p>
+      <div class="g g3" style="margin-bottom:18px">
+        <div class="card" style="border-top:3px solid var(--cyan)">
+          <div class="card-icon">⚠️</div><div class="card-lbl">El problema central</div>
+          <h4>Sin proceso = Sin control</h4>
+          <p>Una interrupción no comunicada deja al cliente sin contexto, a la organización sin evidencia y a Control Interno sin trazabilidad.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--warning)">
+          <div class="card-icon" style="background:rgba(255,179,71,.1)">🔄</div><div class="card-lbl">El reto operativo</div>
+          <h4>Múltiples servicios, un solo proceso</h4>
+          <p>Pagos, plataforma, tarjetas, SPEI, TPV y multidivisa requieren un modelo de comunicación unificado que funcione bajo presión.</p>
+        </div>
+        <div class="card" style="border-top:3px solid var(--teal)">
+          <div class="card-icon" style="background:rgba(10,245,200,.08)">🎯</div><div class="card-lbl">La solución</div>
+          <h4>Dos vías, un mismo flujo</h4>
+          <p>Hoy: <strong style="color:var(--sf)">Salesforce</strong> para email. Mañana: <strong style="color:var(--collab-l)">Collab</strong> como CRM con SMS y email. El proceso de 9 pasos no cambia.</p>
+        </div>
+      </div>
+      <div class="sec-title">Riesgos sin este proceso</div>
+      <div class="rc"><span class="rt">🔴 Riesgo operativo</span><p style="font-size:12px;color:var(--white-dim)">Sin criterios claros, cada área actúa de forma independiente generando comunicaciones inconsistentes o silencios que agravan la percepción del cliente.</p></div>
+      <div class="rc w"><span class="rt w">🟡 Riesgo reputacional</span><p style="font-size:12px;color:var(--white-dim)">El cliente experimenta una falla sin recibir notificación. Genera desconfianza, cancelaciones y daño a la marca difícil de revertir.</p></div>
+      <div class="rc ok"><span class="rt ok">🟢 Riesgo de auditoría</span><p style="font-size:12px;color:var(--white-dim)">Sin evidencia documentada, Control Interno no puede verificar el cumplimiento. Cada incidente sin expediente es un hallazgo potencial.</p></div>
+    </div>
+
+    <!-- ════ SLIDE 2 · ALCANCE ══════════════════ -->
+    <div class="slide" data-title="M2 · Alcance y Principios">
+      <div class="mod-label">● Módulo 2 · Alcance</div>
+      <h2 class="slide-title">¿Qué entra y qué no?</h2>
+      <p class="slide-sub">El proceso aplica a eventos masivos que afectan a múltiples clientes simultáneamente. Los casos individuales tienen ruta directa a soporte.</p>
+      <div class="g g2" style="margin-bottom:18px">
+        <div class="scope scope-in">
+          <div class="scope-h">✔ Dentro del alcance</div>
+          <div class="si"><span style="color:var(--teal)">✔</span>Caídas de plataforma que afectan a múltiples usuarios simultáneamente</div>
+          <div class="si"><span style="color:var(--teal)">✔</span>Intermitencias en procesamiento de pagos con impacto masivo</div>
+          <div class="si"><span style="color:var(--teal)">✔</span>Fallas en SPEI, transferencias o domiciliaciones que bloquean operaciones</div>
+          <div class="si"><span style="color:var(--teal)">✔</span>Indisponibilidad de tarjetas o TPV de forma generalizada</div>
+          <div class="si"><span style="color:var(--teal)">✔</span>Errores en conversión multidivisa que afectan múltiples transacciones</div>
+        </div>
+        <div class="scope scope-out">
+          <div class="scope-h">✖ Fuera del alcance</div>
+          <div class="si"><span style="color:var(--danger)">✖</span>Casos individuales de clientes (se atienden por soporte directo)</div>
+          <div class="si"><span style="color:var(--danger)">✖</span>Mantenimientos programados previamente notificados</div>
+          <div class="si"><span style="color:var(--danger)">✖</span>Errores de usuario no relacionados con infraestructura</div>
+          <div class="si"><span style="color:var(--danger)">✖</span>Incidencias menores resueltas en &lt;5 min sin impacto visible</div>
+          <div class="si"><span style="color:var(--danger)">✖</span>Fallas de terceros fuera del control operativo de la empresa</div>
+        </div>
+      </div>
+      <div class="sec-title">Principios del modelo</div>
+      <div class="g g3">
+        <div class="card"><div class="card-icon">🧠</div><h4>Quién decide</h4><p>Ops/Tech evalúa el impacto. Dirección valida en eventos de alta criticidad y decide escalamientos cuando aplica.</p></div>
+        <div class="card"><div class="card-icon">⚡</div><h4>Quién ejecuta</h4><p>Customer Success ejecuta la comunicación. Operaciones provee las bases de datos (emails y teléfonos) para semiautomatizar el envío.</p></div>
+        <div class="card"><div class="card-icon">📋</div><h4>Qué se comunica</h4><p>Siempre inicio y cierre del evento. Mensaje claro, honesto y orientado al cliente. Sin tecnicismos internos.</p></div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 3 · CANALES Y VÍAS ══════════ -->
+    <div class="slide" data-title="M3 · Las Dos Vías del Proceso">
+      <div class="mod-label">● Módulo 3 · Modelo operativo · Canales</div>
+      <h2 class="slide-title">Dos vías. Un mismo proceso de 9 pasos.</h2>
+      <p class="slide-sub">El flujo operativo no cambia entre vías. Lo que evoluciona es la plataforma: de Salesforce solo para email, a Collab como CRM completo con SMS y email.</p>
+
+      <div class="g g2" style="margin-bottom:20px">
+
+        <!-- VIA TEMPORAL -->
+        <div class="via-box">
+          <div class="via-top temp">
+            <span class="via-tag temp">⏳ HOY</span>
+            <div>
+              <div class="via-name temp">Vía Temporal</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:1px">Proceso activo en producción</div>
+            </div>
+          </div>
+          <div class="via-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <span class="pb pb-sf">✉️ Email · Salesforce</span>
+              <div style="flex:1;height:1px;background:var(--border);min-width:16px"></div>
+              <span style="font-size:10.5px;color:var(--muted)">Canal único</span>
+            </div>
+            <ul class="rl">
+              <li><span class="dot" style="background:var(--sf)"></span>El <strong style="color:var(--sf)">único canal de comunicación</strong> al cliente es el <strong style="color:var(--sf)">email vía Salesforce</strong></li>
+              <li><span class="dot" style="background:var(--sf)"></span>Operaciones proporciona la base de datos de <strong>emails</strong> de los clientes afectados</li>
+              <li><span class="dot" style="background:var(--sf)"></span>Customer Success prepara y envía la campaña de email (inicio y cierre)</li>
+              <li><span class="dot" style="background:var(--sf)"></span>El log de Salesforce (envíos, aperturas, rebotes) constituye la evidencia de auditoría</li>
+              <li><span class="dot" style="background:var(--sf)"></span>Reporte de cierre generado a partir del log de Salesforce</li>
+            </ul>
+            <div class="cl2 w" style="margin-top:12px">
+              <div class="cl2-icon">⚠️</div>
+              <div class="cl2-text" style="font-size:11.5px"><strong>Sin SMS en vía temporal.</strong> La comunicación masiva se hace únicamente por email mientras no esté disponible Collab para producción.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- VIA DEFINITIVA -->
+        <div class="via-box">
+          <div class="via-top def">
+            <span class="via-tag def">🎯 OBJETIVO</span>
+            <div>
+              <div class="via-name def">Vía Definitiva</div>
+              <div style="font-size:10.5px;color:var(--muted);margin-top:1px">Collab como CRM completo</div>
+            </div>
+          </div>
+          <div class="via-body">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+              <span class="pb pb-sms">📱 SMS · Collab</span>
+              <span style="font-size:11px;color:var(--muted)">+</span>
+              <span class="pb pb-cl">✉️ Email · Collab <span style="font-size:9px;opacity:.7">(opcional)</span></span>
+            </div>
+            <ul class="rl">
+              <li><span class="dot" style="background:var(--collab-l)"></span><strong style="color:var(--cyan)">SMS es el canal principal</strong> — alta tasa de apertura inmediata</li>
+              <li><span class="dot" style="background:var(--collab-l)"></span>Email desde Collab es <strong style="color:var(--warning)">opcional</strong>: se activa según criticidad del evento o cuando el caso lo justifica</li>
+              <li><span class="dot" style="background:var(--collab-l)"></span>Operaciones proporciona BD unificada de <strong>teléfonos</strong> (y emails si aplica) a Collab</li>
+              <li><span class="dot" style="background:var(--collab-l)"></span>Collab actúa como CRM: gestión de contactos, envíos y logs en una sola plataforma</li>
+              <li><span class="dot" style="background:var(--collab-l)"></span>Logs centralizados → reporte de cierre generado automáticamente</li>
+            </ul>
+            <div class="cl2 purple" style="margin-top:12px">
+              <div class="cl2-icon">💡</div>
+              <div class="cl2-text" style="font-size:11.5px"><strong>Collab como CRM:</strong> permite gestionar contactos, SMS y email desde una sola plataforma, eliminando la necesidad de Salesforce para comunicación de intermitencias.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- COMMON ELEMENTS -->
+      <div class="sec-title" style="margin-bottom:10px">Común a ambas vías</div>
+      <div class="g g3">
+        <div class="card" style="border-left:3px solid var(--blue)">
+          <div class="card-icon">🗄️</div><div class="card-lbl">Base de datos · Operaciones</div>
+          <h4>Operaciones provee la BD</h4>
+          <p>Mantiene y entrega la base de emails (vía temporal) y teléfonos/emails (vía definitiva) para la ejecución semiautomática.</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--cyan)">
+          <div class="card-icon">📊</div><div class="card-lbl">Reporte de cierre · Siempre</div>
+          <h4>Generado en todo evento</h4>
+          <p>Cronología, clientes afectados, mensajes enviados y log de entrega. Obligatorio en ambas vías para cierre del expediente.</p>
+        </div>
+        <div class="card" style="border-left:3px solid var(--gold)">
+          <div class="card-icon">🔍</div><div class="card-lbl">Logs auditables · Ambas vías</div>
+          <h4>Trazabilidad completa</h4>
+          <p>El log de Salesforce (temporal) o Collab (definitiva) se conserva como evidencia auditable para Control Interno.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 4 · RESPONSABLES ═══════════ -->
+    <div class="slide" data-title="M4 · Responsables por Área">
+      <div class="mod-label">● Módulo 4 · Responsables</div>
+      <h2 class="slide-title">¿Quién hace qué? Roles sin ambigüedad.</h2>
+      <p class="slide-sub">Cada área tiene responsabilidades claras y no intercambiables. La claridad de roles es lo que hace funcionar el modelo bajo presión.</p>
+      <div class="g g2">
+        <div class="rc2">
+          <div class="rh"><div class="rav" style="background:rgba(26,108,246,.12)">⚙️</div><div><div class="rn">Operaciones · Tecnología · SPEI</div><div class="rd">Detección, evaluación técnica y provisión de datos</div></div></div>
+          <ul class="rl">
+            <li><span class="dot"></span>Detecta la intermitencia y evalúa su alcance e impacto masivo</li>
+            <li><span class="dot"></span>Determina si el evento activa el proceso de comunicación</li>
+            <li><span class="dot"></span>Notifica internamente a Customer Success y Dirección</li>
+            <li><span class="dot" style="background:var(--blue-light)"></span><strong style="color:var(--blue-light)">Proporciona la base de datos</strong>: emails para vía temporal (SF) o teléfonos y emails para vía definitiva (Collab)</li>
+            <li><span class="dot"></span>Trabaja en la resolución técnica y confirma el cierre internamente</li>
+          </ul>
+        </div>
+        <div class="rc2">
+          <div class="rh"><div class="rav" style="background:rgba(0,212,255,.08)">💬</div><div><div class="rn">Customer Success</div><div class="rd">Ejecución de comunicación masiva al cliente</div></div></div>
+          <ul class="rl">
+            <li><span class="dot"></span>Recibe la alerta interna y la base de datos de Operaciones</li>
+            <li><span class="dot"></span>Prepara y ejecuta los mensajes de inicio (Email en temporal / SMS ± Email en definitiva)</li>
+            <li><span class="dot"></span>Ejecuta la comunicación de cierre al restablecerse el servicio</li>
+            <li><span class="dot"></span>Genera los logs y evidencias de los envíos realizados</li>
+            <li><span class="dot"></span>Consolida y entrega el expediente + reporte a Control Interno</li>
+          </ul>
+          <div class="cl2 d" style="margin-top:9px;padding:8px 11px">
+            <div class="cl2-icon" style="font-size:13px">⛔</div>
+            <div class="cl2-text" style="font-size:11px"><strong>CS no atiende dudas ni consultas individuales</strong> durante la intermitencia. Su foco exclusivo es la ejecución eficiente del proceso masivo.</div>
+          </div>
+        </div>
+        <div class="rc2">
+          <div class="rh"><div class="rav" style="background:rgba(255,179,71,.1)">🔍</div><div><div class="rn">Control Interno</div><div class="rd">Trazabilidad, auditoría y cumplimiento</div></div></div>
+          <ul class="rl">
+            <li><span class="dot" style="background:var(--warning)"></span>Verifica que el proceso fue ejecutado correctamente en la vía utilizada</li>
+            <li><span class="dot" style="background:var(--warning)"></span>Recibe, revisa y conserva el expediente del incidente</li>
+            <li><span class="dot" style="background:var(--warning)"></span>Valida que inicio y cierre fueron comunicados con evidencia</li>
+            <li><span class="dot" style="background:var(--warning)"></span>Valida integridad del log (Salesforce o Collab según la vía)</li>
+            <li><span class="dot" style="background:var(--warning)"></span>Genera recomendaciones de mejora al proceso</li>
+          </ul>
+        </div>
+        <div class="rc2">
+          <div class="rh"><div class="rav" style="background:rgba(10,245,200,.08)">🏛️</div><div><div class="rn">Dirección General</div><div class="rd">Supervisión ejecutiva y decisiones de escalamiento</div></div></div>
+          <ul class="rl">
+            <li><span class="dot" style="background:var(--gold)"></span>Recibe notificación inmediata en eventos de alto impacto</li>
+            <li><span class="dot" style="background:var(--gold)"></span><strong style="color:var(--gold)">Recibe y revisa los reportes</strong> de cierre de intermitencias</li>
+            <li><span class="dot" style="background:var(--gold)"></span>Toma decisiones de escalamiento cuando el caso lo amerita</li>
+            <li><span class="dot" style="background:var(--gold)"></span>Supervisa el desempeño del proceso mediante reportes consolidados</li>
+          </ul>
+          <div class="cl2" style="margin-top:9px;padding:8px 11px">
+            <div class="cl2-icon" style="font-size:13px">📋</div>
+            <div class="cl2-text" style="font-size:11px">Dirección <strong>no opera el proceso</strong>. Recibe reportes, los revisa y escala cuando corresponde.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 5 · BPMN TEMPORAL ══════════ -->
+    <div class="slide" data-title="M5 · BPMN — Vía Temporal (Salesforce)">
+      <div class="mod-label">● Módulo 5 · Diagrama BPMN</div>
+      <h2 class="slide-title">Vía Temporal <span style="color:var(--sf);font-size:17px">— Solo Email · Salesforce</span></h2>
+      <p class="slide-sub">Proceso activo hoy. Canal único: email vía Salesforce. Sin SMS. El log de Salesforce es la única fuente de evidencia para el expediente de auditoría.</p>
+
+      <div class="bpmn-outer">
+        <div class="bpmn">
+
+          <!-- Ops/Tech -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Ops / Tech</div><div class="lane-sub">Detección</div></div>
+            <div class="lane-body">
+              <div class="be start">🔴</div><div class="ba">→</div>
+              <div class="bt ops">Detecta<br>falla masiva</div><div class="ba">→</div>
+              <div class="bt ops">Evalúa alcance<br>e impacto</div><div class="ba">→</div>
+              <div class="bgw"><span>?</span></div>
+              <span style="font-size:9px;color:var(--warning);margin:0 3px">¿Masivo?</span>
+              <div class="ba">→</div>
+              <div class="bt ops">Notifica<br>internamente</div><div class="ba">→</div>
+              <div class="bt ops">Trabaja en<br>resolución</div><div class="ba">→</div>
+              <div class="bt ops hl">Confirma<br>cierre técnico</div>
+            </div>
+          </div>
+
+          <!-- Operaciones BD emails -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Operaciones</div><div class="lane-sub">BD Emails</div></div>
+            <div class="lane-body">
+              <div class="bdb ops-db">BD<br>Emails</div>
+              <div class="ba">→</div>
+              <div style="font-size:11px;color:var(--blue-light);font-style:italic">Entrega base de emails a Customer Success para carga en Salesforce</div>
+            </div>
+          </div>
+
+          <!-- CS Email Salesforce ÚNICA CALLE -->
+          <div class="lane" style="min-height:74px">
+            <div class="lane-lbl"><div class="lane-name">Customer Success</div><div class="lane-sub" style="color:var(--sf)">Email · Salesforce</div></div>
+            <div class="lane-body">
+              <div class="bt sf2" style="position:relative">Recibe alerta<br>+ BD emails<div class="cb cb-sf">SF</div></div><div class="ba">→</div>
+              <div class="bt sf2" style="position:relative">Carga BD en<br>Salesforce<div class="cb cb-sf">SF</div></div><div class="ba">→</div>
+              <div class="bt sf2" style="position:relative">Envía Email<br>de inicio<div class="cb cb-sf">SF</div></div><div class="ba">→</div>
+              <span style="font-size:9.5px;color:var(--muted);padding:0 4px">… gestión resolución …</span>
+              <div class="ba">→</div>
+              <div class="bt sf2" style="position:relative">Envía Email<br>de cierre<div class="cb cb-sf">SF</div></div><div class="ba">→</div>
+              <div class="bt sf2 hl-sf" style="position:relative">Log SF<br>exportado<div class="cb cb-sf">SF</div></div>
+            </div>
+          </div>
+
+          <!-- Control Interno -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Control Interno</div><div class="lane-sub">Auditoría</div></div>
+            <div class="lane-body">
+              <div class="bt ci2">Recibe<br>expediente</div><div class="ba">→</div>
+              <div class="bt ci2">Valida log<br>Salesforce</div><div class="ba">→</div>
+              <div class="bt ci2">Verifica inicio<br>y cierre</div><div class="ba">→</div>
+              <div class="bt ci2 hl">Archiva<br>expediente</div><div class="ba">→</div>
+              <div class="be end-ok">✔</div>
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Dirección</div><div class="lane-sub">Supervisión</div></div>
+            <div class="lane-body">
+              <div class="bt dir">Recibe<br>notificación</div><div class="ba">→</div>
+              <div class="bt dir hl">Revisa<br>reporte cierre</div><div class="ba">→</div>
+              <div class="bgw"><span>!</span></div>
+              <span style="font-size:9px;color:var(--gold);margin:0 4px">¿Escalar?</span>
+              <div class="ba">→</div>
+              <div class="bt dir">Decisión de<br>escalamiento</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="cl2" style="border-color:rgba(0,161,224,.3);background:rgba(0,161,224,.05);margin-top:12px">
+        <div class="cl2-icon">✉️</div>
+        <div class="cl2-text"><strong style="color:var(--sf)">Vía temporal = solo Salesforce.</strong> El email es el único canal de comunicación masiva al cliente. No hay SMS. El log de Salesforce (envíos, aperturas, rebotes, clics) es la fuente única de evidencia para el expediente auditable.</div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 6 · BPMN DEFINITIVO ════════ -->
+    <div class="slide" data-title="M6 · BPMN — Vía Definitiva (Collab CRM)">
+      <div class="mod-label">● Módulo 6 · Diagrama BPMN</div>
+      <h2 class="slide-title">Vía Definitiva <span style="color:var(--collab-l);font-size:17px">— Collab CRM: SMS + Email opcional</span></h2>
+      <p class="slide-sub">Proceso objetivo. Collab actúa como CRM: SMS como canal principal + email opcional según criticidad. Logs centralizados. Reporte de cierre automático.</p>
+
+      <div class="bpmn-outer">
+        <div class="bpmn">
+
+          <!-- Ops/Tech -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Ops / Tech</div><div class="lane-sub">Detección</div></div>
+            <div class="lane-body">
+              <div class="be start">🔴</div><div class="ba">→</div>
+              <div class="bt ops">Detecta<br>falla masiva</div><div class="ba">→</div>
+              <div class="bt ops">Evalúa alcance<br>e impacto</div><div class="ba">→</div>
+              <div class="bgw"><span>?</span></div>
+              <span style="font-size:9px;color:var(--warning);margin:0 3px">¿Masivo?</span>
+              <div class="ba">→</div>
+              <div class="bt ops">Notifica<br>internamente</div><div class="ba">→</div>
+              <div class="bt ops">Trabaja en<br>resolución</div><div class="ba">→</div>
+              <div class="bt ops hl">Confirma<br>cierre técnico</div>
+            </div>
+          </div>
+
+          <!-- Operaciones BD Unificada -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Operaciones</div><div class="lane-sub">BD Unificada</div></div>
+            <div class="lane-body">
+              <div class="bdb ops-db">BD<br>Tel. + Email</div>
+              <div class="ba">→</div>
+              <div class="bt cl2" style="position:relative">Carga BD<br>en Collab<div class="cb cb-cl">CL</div></div>
+              <div class="ba">→</div>
+              <span style="font-size:11px;color:var(--collab-l);font-style:italic">Base unificada para SMS y email desde Collab CRM</span>
+            </div>
+          </div>
+
+          <!-- CS SMS — canal principal -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Customer Success</div><div class="lane-sub" style="color:var(--cyan)">SMS · Collab (principal)</div></div>
+            <div class="lane-body">
+              <div class="bt cl2" style="position:relative">Recibe alerta<br>+ BD<div class="cb cb-cl">CL</div></div><div class="ba">→</div>
+              <div class="bt cl2" style="position:relative">Prepara SMS<br>de inicio<div class="cb cb-cl">CL</div></div><div class="ba">→</div>
+              <div class="bt cl2" style="position:relative">Envío SMS<br>masivo inicio<div class="cb cb-cl">CL</div></div><div class="ba">→</div>
+              <span style="font-size:9.5px;color:var(--muted)">… resolución …</span>
+              <div class="ba">→</div>
+              <div class="bt cl2" style="position:relative">Envío SMS<br>masivo cierre<div class="cb cb-cl">CL</div></div><div class="ba">→</div>
+              <div class="bt cl2 hl-cl" style="position:relative">Log SMS<br>Collab<div class="cb cb-cl">CL</div></div>
+            </div>
+          </div>
+
+          <!-- CS Email opcional -->
+          <div class="lane" style="opacity:.85">
+            <div class="lane-lbl"><div class="lane-name">Customer Success</div><div class="lane-sub" style="color:var(--warning)">Email · Collab (opcional)</div></div>
+            <div class="lane-body">
+              <div class="bgw" style="border-color:var(--collab-l)"><span style="transform:rotate(-45deg);font-size:10px">?</span></div>
+              <span style="font-size:9px;color:var(--collab-l);margin:0 5px">¿Aplica<br>email?</span>
+              <div class="ba">→</div>
+              <div class="bt cl2 optional" style="position:relative">Envío Email<br>de inicio<div class="cb cb-cl">CL</div></div>
+              <div class="ba">→</div>
+              <span style="font-size:9.5px;color:var(--muted)">… resolución …</span>
+              <div class="ba">→</div>
+              <div class="bt cl2 optional" style="position:relative">Envío Email<br>de cierre<div class="cb cb-cl">CL</div></div>
+              <div class="ba">→</div>
+              <div class="bt cl2 optional" style="position:relative">Log Email<br>Collab<div class="cb cb-cl">CL</div></div>
+            </div>
+          </div>
+
+          <!-- Control Interno -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Control Interno</div><div class="lane-sub">Auditoría</div></div>
+            <div class="lane-body">
+              <div class="bt ci2">Recibe<br>expediente</div><div class="ba">→</div>
+              <div class="bt ci2">Valida logs<br>Collab (SMS ± Email)</div><div class="ba">→</div>
+              <div class="bt ci2">Verifica inicio<br>y cierre</div><div class="ba">→</div>
+              <div class="bt ci2 hl">Archiva<br>expediente</div><div class="ba">→</div>
+              <div class="be end-ok">✔</div>
+            </div>
+          </div>
+
+          <!-- Dirección -->
+          <div class="lane">
+            <div class="lane-lbl"><div class="lane-name">Dirección</div><div class="lane-sub">Supervisión</div></div>
+            <div class="lane-body">
+              <div class="bt dir">Recibe<br>notificación</div><div class="ba">→</div>
+              <div class="bt dir hl">Revisa reporte<br>automático Collab</div><div class="ba">→</div>
+              <div class="bgw"><span>!</span></div>
+              <span style="font-size:9px;color:var(--gold);margin:0 4px">¿Escalar?</span>
+              <div class="ba">→</div>
+              <div class="bt dir">Decisión de<br>escalamiento</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="g g2" style="margin-top:12px">
+        <div class="cl2" style="border-color:rgba(167,139,250,.3);background:rgba(124,58,237,.05)">
+          <div class="cl2-icon">📱</div>
+          <div class="cl2-text" style="font-size:11.5px"><strong style="color:var(--cyan)">SMS es siempre obligatorio</strong> en vía definitiva. Alta tasa de apertura inmediata (&gt;90%). Es el canal principal de comunicación al cliente.</div>
+        </div>
+        <div class="cl2" style="border-color:rgba(255,179,71,.3);background:rgba(255,179,71,.04)">
+          <div class="cl2-icon">✉️</div>
+          <div class="cl2-text" style="font-size:11.5px"><strong style="color:var(--warning)">Email es opcional en vía definitiva.</strong> Se activa según la criticidad del evento, cuando se requiere mayor detalle o cuando el caso lo justifica. Siempre desde Collab.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 7 · FLUJO 9 PASOS ══════════ -->
+    <div class="slide" data-title="M7 · Flujo Operativo (9 pasos)">
+      <div class="mod-label">● Módulo 7 · Flujo operativo</div>
+      <h2 class="slide-title">9 pasos. Sin excepción.</h2>
+      <p class="slide-sub">El flujo es idéntico en ambas vías. Lo que cambia es la plataforma y el canal. Haz clic en cada paso para ver el detalle, el responsable y las entradas/salidas.</p>
+      <div class="sf-wrap" id="stepFlow"></div>
+    </div>
+
+    <!-- ════ SLIDE 8 · TIPOLOGÍA ═══════════════ -->
+    <div class="slide" data-title="M8 · Tipología y Regla de Comunicación">
+      <div class="mod-label">● Módulo 8 · Tipología</div>
+      <h2 class="slide-title">¿Cuándo sí y cuándo no?</h2>
+      <p class="slide-sub">La regla base: si el evento afecta a múltiples clientes simultáneamente activa el proceso. En vía definitiva, SMS siempre; email según criticidad.</p>
+      <div style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:16px">
+        <table class="tbl">
+          <thead><tr><th>Tipo de evento</th><th>Alcance</th><th>Vía temporal · SF</th><th>Vía definitiva · Collab</th><th>¿Activa?</th></tr></thead>
+          <tbody>
+            <tr><td>Caída total de plataforma</td><td>Todos los clientes</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span> + <span class="pb pb-cl">Email</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Intermitencia en pagos</td><td>Múltiples clientes</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Falla de SPEI</td><td>Múltiples clientes</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span> + <span class="pb pb-cl">Email</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Indisponibilidad de tarjetas</td><td>Segmento afectado</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Falla en TPV generalizada</td><td>Múltiples comercios</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span> + <span class="pb pb-cl">Email</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Error multidivisa masivo</td><td>Ops afectadas</td><td><span class="pb pb-sf">Email</span></td><td><span class="pb pb-sms">SMS</span></td><td><span class="badge by">✔ Sí</span></td></tr>
+            <tr><td>Falla individual de pago</td><td>1 cliente</td><td>—</td><td>—</td><td><span class="badge bn">✖ No</span></td></tr>
+            <tr><td>Mantenimiento programado</td><td>Todos</td><td><span class="pb pb-sf">Email previo</span></td><td><span class="pb pb-cl">Email previo</span></td><td><span class="badge bw">⚠ Preventivo</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="g g2">
+        <div class="card" style="border-color:var(--teal);background:rgba(10,245,200,.04)">
+          <div style="font-size:26px;margin-bottom:9px">✔</div><div class="card-lbl" style="color:var(--teal)">Sí se comunica cuando...</div>
+          <ul class="rl" style="margin-top:6px">
+            <li><span class="dot"></span>Múltiples clientes afectados simultáneamente</li>
+            <li><span class="dot"></span>Operación interrumpida por causa del sistema</li>
+            <li><span class="dot"></span>El tiempo supera el umbral de resolución definido</li>
+            <li><span class="dot"></span>Control Interno o Dirección así lo indican</li>
+          </ul>
+        </div>
+        <div class="card" style="border-color:var(--danger);background:rgba(255,79,110,.04)">
+          <div style="font-size:26px;margin-bottom:9px">✖</div><div class="card-lbl" style="color:var(--danger)">No se comunica cuando...</div>
+          <ul class="rl" style="margin-top:6px">
+            <li><span class="dot" style="background:var(--danger)"></span>El caso es individual y aislado, sin patrón masivo</li>
+            <li><span class="dot" style="background:var(--danger)"></span>El mantenimiento fue programado y notificado previamente</li>
+            <li><span class="dot" style="background:var(--danger)"></span>El error es atribuible al comportamiento del usuario</li>
+            <li><span class="dot" style="background:var(--danger)"></span>El evento se resolvió antes del umbral mínimo</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 9 · TRAZABILIDAD ════════════ -->
+    <div class="slide" data-title="M9 · Trazabilidad y Auditoría">
+      <div class="mod-label">● Módulo 9 · Trazabilidad</div>
+      <h2 class="slide-title">Evidencia que protege a la organización</h2>
+      <p class="slide-sub">Cada incidente genera un expediente completo. La fuente del log varía según la vía, pero la estructura del expediente es la misma.</p>
+      <div class="g g2">
+        <div>
+          <div class="sec-title" style="margin-bottom:11px">Expediente por incidente</div>
+          <div class="ev-row"><div class="ev-n">01</div><div class="ev-b"><div class="ev-name">Alerta interna de detección</div><div class="ev-desc">Fecha, hora, área notificante, descripción y alcance estimado del evento.</div></div></div>
+          <div class="ev-row"><div class="ev-n">02</div><div class="ev-b"><div class="ev-name">Base de datos utilizada</div><div class="ev-desc">BD de emails (temporal) o BD de teléfonos ± emails (definitiva) proporcionada por Operaciones.</div></div></div>
+          <div class="ev-row"><div class="ev-n">03</div><div class="ev-b"><div class="ev-name">Log de Email · Salesforce (vía temporal)</div><div class="ev-desc">Lista de envío, tasa de apertura, clics, rebotes y confirmaciones de entrega.</div></div></div>
+          <div class="ev-row"><div class="ev-n">04</div><div class="ev-b"><div class="ev-name">Log de SMS · Collab (vía definitiva)</div><div class="ev-desc">Destinatarios, contenido, timestamp, tasa de entrega y fallidos por número.</div></div></div>
+          <div class="ev-row"><div class="ev-n">05</div><div class="ev-b"><div class="ev-name">Log de Email · Collab opcional (vía definitiva)</div><div class="ev-desc">Si se activó email adicional: envíos, aperturas, rebotes desde Collab.</div></div></div>
+          <div class="ev-row"><div class="ev-n">06</div><div class="ev-b"><div class="ev-name">Comunicación de inicio y cierre</div><div class="ev-desc">Evidencia de ambos mensajes al cliente con timestamp exacto de envío.</div></div></div>
+          <div class="ev-row"><div class="ev-n">07</div><div class="ev-b"><div class="ev-name">Reporte consolidado de cierre</div><div class="ev-desc">Cronología, acciones, clientes afectados, resolución y lecciones aprendidas.</div></div></div>
+        </div>
+        <div>
+          <div class="sec-title" style="margin-bottom:11px">Logs por vía</div>
+          <div style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+              <span class="pb pb-sf">✉️ Email · Salesforce</span>
+              <span style="font-size:10.5px;color:var(--muted)">Solo vía temporal</span>
+            </div>
+            <div class="term">
+<span class="tg">2024-03-15 09:15:01</span> <span class="tsf">SFMC</span> <span class="tw">INT-0342</span> <span class="tm">EMAIL_INICIO</span><br>
+<span class="tm">sent=4,821 | opened=61.2% | bounced=24 | clicks=310</span><br>
+<span class="tg">2024-03-15 11:03:44</span> <span class="tsf">SFMC</span> <span class="tw">INT-0342</span> <span class="tm">EMAIL_CIERRE</span><br>
+<span class="tm">sent=4,821 | opened=54.8% | bounced=21 | clicks=198</span>
+            </div>
+          </div>
+          <div style="margin-bottom:14px">
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+              <span class="pb pb-sms">📱 SMS · Collab</span>
+              <span style="font-size:10.5px;color:var(--muted)">Canal principal vía definitiva</span>
+            </div>
+            <div class="term">
+<span class="tg">2024-03-15 09:14:32</span> <span class="tcl">COLLAB</span> <span class="tw">INT-0342</span> <span class="tm">SMS_INICIO</span><br>
+<span class="tm">recipients=4,821 | delivered=98.7% | failed=63</span><br>
+<span class="tg">2024-03-15 11:02:19</span> <span class="tcl">COLLAB</span> <span class="tw">INT-0342</span> <span class="tm">SMS_CIERRE</span><br>
+<span class="tm">recipients=4,821 | delivered=99.1% | failed=43</span>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex;align-items:center;gap:7px;margin-bottom:6px">
+              <span class="pb pb-cl">✉️ Email · Collab</span>
+              <span style="font-size:10.5px;color:var(--warning)">Opcional vía definitiva</span>
+            </div>
+            <div class="term">
+<span class="tg">2024-03-15 09:15:10</span> <span class="tcl">COLLAB</span> <span class="tw">INT-0342</span> <span class="tm">EMAIL_INICIO</span><br>
+<span class="tm">sent=4,821 | opened=58.4% | bounced=18</span><br>
+<span class="tg">2024-03-15 11:04:02</span> <span class="tcl">COLLAB</span> <span class="tw">INT-0342</span> <span class="tm">EMAIL_CIERRE</span><br>
+<span class="tm">sent=4,821 | opened=51.2% | bounced=15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 10 · PUNTO CRÍTICO ══════════ -->
+    <div class="slide" data-title="M10 · Punto Crítico del Modelo">
+      <div class="mod-label">● Módulo 10 · Punto crítico</div>
+      <h2 class="slide-title">Lo que nunca puede fallar</h2>
+      <p class="slide-sub">Dos momentos son absolutamente obligatorios en ambas vías: el <strong style="color:var(--warning)">inicio</strong> y el <strong style="color:var(--teal)">cierre</strong>. Si alguno falla, el proceso falla.</p>
+      <div class="g g2" style="margin-bottom:16px">
+        <div class="crit" style="border-color:rgba(255,179,71,.35);background:rgba(255,179,71,.04)">
+          <div class="crit-icon">🟡</div>
+          <div class="crit-title">Comunicación de inicio</div>
+          <div class="crit-desc">Se envía en cuanto se confirma el impacto masivo. No esperes tener toda la información. <strong style="color:var(--warning)">Temporal: email SF inmediato. Definitiva: SMS inmediato ± email según criticidad.</strong></div>
+        </div>
+        <div class="crit" style="border-color:rgba(10,245,200,.35);background:rgba(10,245,200,.04)">
+          <div class="crit-icon">🟢</div>
+          <div class="crit-title">Comunicación de cierre</div>
+          <div class="crit-desc">Es tan importante como el inicio. Sin cierre el cliente queda en incertidumbre. <strong style="color:var(--teal)">El cierre activa el reporte final</strong> para el cliente, Control Interno y Dirección. Es el paso que cierra el expediente.</div>
+        </div>
+      </div>
+      <div class="g g3">
+        <div class="card"><div class="card-icon" style="background:rgba(255,79,110,.1)">👥</div><div class="card-lbl">Experiencia del cliente</div><h4>Sin cierre = Incertidumbre</h4><p>El cliente que recibió el aviso de inicio y no el de cierre asume que el problema sigue activo. Genera quejas y pérdida de confianza.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(255,179,71,.1)">🔍</div><div class="card-lbl">Control Interno</div><h4>Sin cierre = Expediente incompleto</h4><p>Un incidente sin comunicación de cierre no puede cerrarse en el expediente. Es un hallazgo de auditoría automático.</p></div>
+        <div class="card"><div class="card-icon" style="background:rgba(10,245,200,.08)">📊</div><div class="card-lbl">Dirección</div><h4>Sin reporte = Sin visibilidad</h4><p>Dirección no puede supervisar ni escalar sin el reporte de cierre. Es el insumo para la toma de decisiones ejecutiva.</p></div>
+      </div>
+      <div class="cl2" style="margin-top:14px">
+        <div class="cl2-icon">🎯</div>
+        <div class="cl2-text"><strong>Regla de oro:</strong> Inicio sin cierre = proceso incompleto = riesgo abierto. El proceso no termina hasta que el cliente sabe que el servicio fue restablecido <em>y</em> el reporte fue entregado a Control Interno y Dirección.</div>
+      </div>
+    </div>
+
+    <!-- ════ SLIDE 11 · RESUMEN EJECUTIVO ══════ -->
+    <div class="slide" data-title="M11 · Resumen Ejecutivo">
+      <div class="mod-label">● Módulo 11 · Resumen ejecutivo</div>
+      <h2 class="slide-title">Síntesis del modelo</h2>
+      <p class="slide-sub">Visión consolidada del proceso, plataformas, responsables y entregables para Dirección y Control Interno.</p>
+      <div class="g g2" style="margin-bottom:16px">
+        <div class="ben"><div class="ben-n">01</div><div><div class="ben-title">Proceso único, dos vías</div><div class="ben-desc"><strong style="color:var(--sf)">Temporal:</strong> solo email vía Salesforce. <strong style="color:var(--collab-l)">Definitiva:</strong> Collab CRM con SMS obligatorio + email opcional según criticidad.</div></div></div>
+        <div class="ben"><div class="ben-n">02</div><div><div class="ben-title">Operaciones provee los datos</div><div class="ben-desc">BD de emails para la vía temporal (SF). BD de teléfonos y emails para la vía definitiva (Collab). Sin esta BD no hay ejecución semiautomática.</div></div></div>
+        <div class="ben"><div class="ben-n">03</div><div><div class="ben-title">Customer Success ejecuta, no atiende</div><div class="ben-desc">CS prepara, envía y documenta la comunicación masiva. No atiende consultas individuales durante la intermitencia. Foco exclusivo en la ejecución.</div></div></div>
+        <div class="ben"><div class="ben-n">04</div><div><div class="ben-title">Dirección revisa, decide y escala</div><div class="ben-desc">Recibe el reporte de cierre y toma decisiones de escalamiento cuando el caso lo amerita. No opera el proceso directamente.</div></div></div>
+      </div>
+      <div class="sec-title" style="margin-bottom:10px">Comparativo de vías</div>
+      <div style="overflow-x:auto;border-radius:var(--radius);border:1px solid var(--border)">
+        <table class="tbl">
+          <thead><tr><th>Elemento</th><th>⏳ Vía Temporal</th><th>🎯 Vía Definitiva</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Canal email</strong></td><td><span class="pb pb-sf">Salesforce · Obligatorio</span></td><td><span class="pb pb-cl">Collab · Opcional según criticidad</span></td></tr>
+            <tr><td><strong>Canal SMS</strong></td><td style="color:var(--danger)">✖ No disponible</td><td><span class="pb pb-sms">Collab · Obligatorio</span></td></tr>
+            <tr><td><strong>Plataforma</strong></td><td>Salesforce (solo email)</td><td>Collab CRM (SMS + email opcional)</td></tr>
+            <tr><td><strong>Base de datos</strong></td><td>BD de emails → Salesforce</td><td>BD teléfonos ± emails → Collab</td></tr>
+            <tr><td><strong>Log de evidencia</strong></td><td>Log de Salesforce (envíos, aperturas)</td><td>Log de Collab (SMS obligatorio ± email opcional)</td></tr>
+            <tr><td><strong>Reporte de cierre</strong></td><td>Manual desde Salesforce</td><td>Automático desde Collab</td></tr>
+            <tr><td><strong>Auditoría</strong></td><td>Una fuente: Salesforce</td><td>Una fuente: Collab (centralizado)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /slides-wrap -->
+
+  <div class="bottom-nav">
+    <div class="slide-c">Diapositiva <span id="slideNum">1</span> / <span id="slideTotal">12</span></div>
+    <div style="display:flex;gap:7px">
+      <button class="btn btn-g" onclick="prevSlide()">← Anterior</button>
+      <button class="btn btn-p" id="btnNextB" onclick="nextSlide()">Siguiente →</button>
+    </div>
+  </div>
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+const modules=[
+  {num:'00',title:'Portada'},
+  {num:'01',title:'Contexto y Problema'},
+  {num:'02',title:'Alcance y Principios'},
+  {num:'03',title:'Las Dos Vías del Proceso'},
+  {num:'04',title:'Responsables por Área'},
+  {num:'05',title:'BPMN · Vía Temporal (Salesforce)'},
+  {num:'06',title:'BPMN · Vía Definitiva (Collab CRM)'},
+  {num:'07',title:'Flujo Operativo · 9 pasos'},
+  {num:'08',title:'Tipología y Regla'},
+  {num:'09',title:'Trazabilidad y Auditoría'},
+  {num:'10',title:'Punto Crítico'},
+  {num:'11',title:'Resumen Ejecutivo'},
+];
+
+const steps=[
+  {
+    name:'1 · Detección',who:'Operaciones / Tecnología / SPEI',
+    detail:'El área técnica detecta la anomalía a través de monitoreo activo, alertas automatizadas o reporte de usuarios. Se confirma que el impacto es masivo y no un caso aislado.',
+    input:'Alerta o reporte de falla',output:'Confirmación de incidente masivo'
+  },
+  {
+    name:'2 · Evaluación del impacto',who:'Operaciones / Tecnología',
+    detail:'Se evalúa el alcance real: cuántos clientes afectados, qué servicios impactados, severidad y tiempo estimado de resolución. Se determina si el evento activa el proceso de comunicación.',
+    input:'Incidente confirmado',output:'Decisión: activar proceso'
+  },
+  {
+    name:'3 · Notificación interna',who:'Operaciones → Customer Success, Dirección, Control Interno',
+    detail:'Se notifica a todas las áreas con la información disponible: tipo de falla, alcance, tiempo estimado de resolución y acción en curso. Dirección recibe la alerta inicial.',
+    input:'Decisión de activar proceso',output:'Todas las áreas notificadas'
+  },
+  {
+    name:'4 · Operaciones entrega la base de datos',who:'Operaciones → Customer Success',
+    detail:'Operaciones proporciona la BD para la ejecución. En vía temporal: base de emails para Salesforce. En vía definitiva: base de teléfonos (obligatorio) y emails (si aplica email adicional) para Collab.',
+    input:'Segmento afectado identificado',output:'BD entregada a Customer Success según vía activa'
+  },
+  {
+    name:'5 · Preparación del mensaje',who:'Customer Success',
+    detail:'Se redacta el mensaje de inicio. Claro, sin tecnicismos. En vía temporal: email con contexto para SF. En vía definitiva: SMS breve y directo para Collab ± email adicional si se decide activarlo.',
+    input:'Brief interno + BD de Operaciones',output:'Mensajes aprobados para envío'
+  },
+  {
+    name:'6 · Envío masivo de inicio',who:'Customer Success — SF (temporal) · Collab (definitiva)',
+    detail:'Se ejecuta el envío masivo. Temporal: email vía Salesforce. Definitiva: SMS obligatorio vía Collab ± email opcional vía Collab según criticidad. Se registra el timestamp de inicio y se genera el log.',
+    input:'Mensajes aprobados',output:'Comunicación enviada + log de inicio generado'
+  },
+  {
+    name:'7 · Resolución técnica',who:'Operaciones / Tecnología',
+    detail:'El equipo técnico resuelve la causa raíz y restablece el servicio. Se confirma internamente que el servicio opera con normalidad antes de ejecutar la comunicación de cierre al cliente.',
+    input:'Trabajo técnico de resolución',output:'Servicio restablecido · Confirmación interna'
+  },
+  {
+    name:'8 · Comunicación de cierre (OBLIGATORIA)',who:'Customer Success',
+    detail:'Se envía la comunicación de cierre al cliente. Temporal: email de cierre vía SF. Definitiva: SMS de cierre vía Collab ± email de cierre si se activó. Se notifica internamente a Dirección y Control Interno. ESTE PASO NO PUEDE OMITIRSE.',
+    input:'Confirmación de resolución interna',output:'Comunicación de cierre enviada + log de cierre + reporte inicial'
+  },
+  {
+    name:'9 · Consolidación del expediente',who:'Customer Success → Control Interno → Dirección',
+    detail:'Se integra el expediente completo: cronología, log de SF o Collab, BD utilizada, clientes afectados y resolución. Control Interno archiva y verifica. Dirección recibe el reporte final y toma decisiones si aplica.',
+    input:'Todas las evidencias del evento',output:'Expediente auditado · Reporte entregado a Dirección'
+  },
+];
+
+let cur=0;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+
+function renderNav(){
+  document.getElementById('navList').innerHTML=modules.map((m,i)=>`
+    <div class="nav-item ${i===cur?'active':i<cur?'completed':''}" onclick="goTo(${i})">
+      <div class="nn">${m.num}</div>
+      <div style="font-size:11px;line-height:1.3">${m.title}</div>
+    </div>`).join('');
+}
+
+function renderSteps(){
+  const f=document.getElementById('stepFlow');
+  if(!f)return;
+  f.innerHTML=steps.map((s,i)=>`
+    <div class="si2" id="st${i}" onclick="toggleStep(${i})">
+      <div class="sl">
+        <div class="sc">${i+1}</div>
+        ${i<steps.length-1?'<div class="sln"></div>':''}
+      </div>
+      <div class="sb2">
+        <div class="s-name">${s.name}<span class="s-arr">▼</span></div>
+        <div class="s-det">
+          <p>${s.detail}</p>
+          <div class="s-who">👤 ${s.who}</div>
+          <div class="s-io">
+            <span class="ip">→ ${s.input}</span>
+            <span class="op">← ${s.output}</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function toggleStep(i){document.getElementById('st'+i).classList.toggle('open');}
+
+function goTo(idx){
+  if(idx<0||idx>=total)return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('exit');
+  setTimeout(()=>slides[cur].classList.remove('exit'),400);
+  cur=idx;
+  slides[cur].classList.add('active');
+  const pct=Math.round((cur/(total-1))*100);
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('progTxt').textContent=`${cur} / ${total-1}`;
+  document.getElementById('slideNum').textContent=cur+1;
+  document.getElementById('tbCrumb').innerHTML=`Comunicación de Intermitencias › <span>${modules[cur].title}</span>`;
+  const last=cur===total-1;
+  ['btnNext','btnNextB'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.textContent=last?'↩ Inicio →':'Siguiente →';
+  });
+  renderNav();
+  if(cur===7)renderSteps();
+}
+
+function nextSlide(){if(cur<total-1)goTo(cur+1);else goTo(0);}
+function prevSlide(){if(cur>0)goTo(cur-1);}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')nextSlide();
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')prevSlide();
+});
+
+document.getElementById('slideTotal').textContent=total;
+renderNav();
+renderSteps();
+</script>
+</body>
+</html>
